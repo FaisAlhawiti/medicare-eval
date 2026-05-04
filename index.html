@@ -1,1 +1,485 @@
-<!DOCTYPE html><html lang="ar" dir="rtl"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>ميدي كير — تقييم الأداء الربع الأول 2026</title></title></head>
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ميدي كير — تقييم الأداء الربع الأول 2026</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+--teal:#0d7a5f;--teal-dark:#095e49;--teal-light:#e8f7f3;--teal-mid:#1d9e75;
+--gold:#c8952a;--navy:#1A3A5C;--border:#e2e8f0;
+--text:#1e293b;--text-muted:#64748b;--white:#fff;--gray-light:#f8fafc;
+}
+body{font-family:'IBM Plex Sans Arabic',sans-serif;direction:rtl;background:linear-gradient(135deg,#f0fdf9,#f8fafc);color:var(--text);min-height:100vh}
+
+#login-screen{display:flex;align-items:center;justify-content:center;min-height:100vh;padding:1rem}
+.login-card{background:#fff;border-radius:20px;padding:2.5rem 2rem;width:100%;max-width:420px;box-shadow:0 4px 32px rgba(13,122,95,.1);border:1px solid rgba(13,122,95,.12)}
+.login-logo{text-align:center;margin-bottom:1.75rem}
+.login-logo .brand{font-size:1.5rem;font-weight:600;color:var(--teal)}
+.login-logo .dot{display:inline-block;width:8px;height:8px;background:var(--gold);border-radius:50%;margin:0 .25rem;vertical-align:middle}
+.login-logo .sub{font-size:.85rem;color:var(--text-muted);margin-top:.25rem}
+.form-group{margin-bottom:1rem}
+.form-group label{display:block;font-size:.85rem;font-weight:500;color:var(--text-muted);margin-bottom:.4rem}
+.form-group select,.form-group input{width:100%;padding:.7rem .9rem;border:1.5px solid var(--border);border-radius:10px;font-family:inherit;font-size:.95rem;color:var(--text);background:#fff;transition:border-color .2s;direction:rtl}
+.form-group select:focus,.form-group input:focus{outline:none;border-color:var(--teal-mid)}
+.login-btn{width:100%;padding:.85rem;background:var(--teal);color:#fff;border:none;border-radius:10px;font-family:inherit;font-size:1rem;font-weight:600;cursor:pointer;margin-top:.5rem;transition:background .2s}
+.login-btn:hover{background:var(--teal-dark)}
+.login-error{color:#dc2626;font-size:.85rem;text-align:center;margin-top:.75rem;display:none}
+
+#app{display:none}
+.topbar{background:var(--teal);color:#fff;padding:.9rem 1.25rem;display:flex;align-items:center;justify-content:space-between}
+.topbar .brand{font-size:1rem;font-weight:600}
+.user-chip{font-size:.8rem;background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.25);border-radius:20px;padding:.3rem .85rem;cursor:pointer}
+.main{max-width:760px;margin:0 auto;padding:1.25rem 1rem 3rem}
+
+.emp-tabs{display:flex;gap:.5rem;flex-wrap:wrap;margin-bottom:1rem}
+.emp-tab{padding:.5rem 1.1rem;border:1.5px solid var(--border);border-radius:8px;font-family:inherit;font-size:.88rem;background:#fff;cursor:pointer;color:var(--text-muted);white-space:nowrap;transition:all .2s}
+.emp-tab.active{background:var(--teal);color:#fff;border-color:var(--teal)}
+.emp-tab.done{border-color:#16a34a;color:#16a34a}
+
+.nurse-header{display:flex;align-items:center;gap:12px;padding:1rem 1.25rem;background:#fff;border:1px solid var(--border);border-radius:14px;margin-bottom:1rem}
+.avatar{width:46px;height:46px;border-radius:50%;background:var(--navy);color:#fff;font-size:1.1rem;font-weight:600;display:flex;align-items:center;justify-content:center}
+.nurse-info h2{font-size:1rem;font-weight:600;margin-bottom:3px}
+.nurse-info p{font-size:.8rem;color:var(--text-muted)}
+
+.q-row{padding:.75rem 0;border-bottom:1px solid var(--border)}
+.q-row:last-child{border-bottom:none}
+.q-label{font-size:.9rem;font-weight:500;margin-bottom:.5rem}
+.q-num{display:inline-flex;align-items:center;justify-content:center;width:22px;height:22px;border-radius:50%;background:var(--teal-light);color:var(--teal);font-size:.7rem;font-weight:700;margin-left:.4rem}
+.stars-std{display:flex;flex-direction:row-reverse;justify-content:flex-end;gap:3px;margin-bottom:.2rem}
+.stars-std input{display:none}
+.stars-std label{font-size:1.75rem;cursor:pointer;color:#dde1e7;transition:color .1s;line-height:1}
+.stars-std input:checked~label,.stars-std label:hover,.stars-std label:hover~label{color:#f59e0b}
+.scale-hint{display:flex;justify-content:space-between;font-size:.7rem;color:var(--text-muted)}
+
+.btn-primary{width:100%;padding:.85rem;background:var(--teal);color:#fff;border:none;border-radius:10px;font-family:inherit;font-size:.95rem;font-weight:600;cursor:pointer;margin-top:1rem}
+.result-section{background:#f0fdf9;border:1.5px solid var(--teal-mid);border-radius:14px;padding:1.25rem;margin-top:1rem;display:none}
+.result-text{font-size:.8rem;line-height:1.9;white-space:pre-wrap;color:var(--text);max-height:300px;overflow-y:auto;padding:.5rem;background:#fff;border-radius:8px;border:1px solid var(--border)}
+.copy-btn{width:100%;margin-top:.75rem;padding:.8rem;background:#fdf6e7;color:var(--gold);border:1.5px solid var(--gold);border-radius:10px;font-family:inherit;font-size:.95rem;font-weight:600;cursor:pointer}
+
+.section-card{background:#fff;border:1px solid var(--border);border-radius:14px;padding:1rem 1.25rem;margin-bottom:1rem}
+.rating-group{margin-bottom:1.5rem}
+.rating-label{font-weight:600;margin-bottom:.5rem;display:block}
+.rating-desc{font-size:.8rem;color:var(--text-muted);margin-bottom:.75rem}
+.rating-scale{display:flex;gap:10px;justify-content:center;margin-bottom:.5rem}
+.rating-btn{width:40px;height:40px;border-radius:8px;border:2px solid var(--border);background:#fff;font-size:1rem;font-weight:600;cursor:pointer;transition:all .2s}
+.rating-btn.selected{background:var(--teal);color:#fff;border-color:var(--teal)}
+.submit-btn{width:100%;padding:1rem;background:var(--teal);color:#fff;border:none;border-radius:10px;font-size:1.1rem;font-weight:600;cursor:pointer;margin-top:1rem}
+.result-card{background:#f0fdf9;border:2px solid var(--teal);border-radius:14px;padding:1.5rem;margin-top:1rem;text-align:center;display:none}
+.result-score{font-size:2.5rem;font-weight:600;color:var(--teal);margin-bottom:.5rem}
+.result-grade{font-size:1.2rem;font-weight:600;padding:.5rem 1rem;border-radius:20px;display:inline-block;margin-bottom:1rem}
+</style>
+</head>
+<body>
+
+<div id="login-screen">
+  <div class="login-card">
+    <div class="login-logo">
+      <div class="brand">ميدي كير <span class="dot"></span> تقييم الأداء</div>
+      <div class="sub">الربع الأول 2026</div>
+    </div>
+    <div class="form-group">
+      <label>اختر اسمك</label>
+      <select id="user-select">
+        <option value="">— اختر —</option>
+        <option value="ahmed_sayed">أحمد السيد — مدير الحسابات</option>
+        <option value="dr_nada">د. ندى — مديرة التسويق</option>
+        <option value="dr_asaad">د. أسعد — المدير العام</option>
+        <option value="abdallah">عبدالله حزام — مدير التشغيل</option>
+        <option value="ceo">الرئيس التنفيذي</option>
+        <option value="dr_khalid">د. خالد — المدير الطبي</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label>كلمة المرور</label>
+      <input type="password" id="password-input" placeholder="أدخل كلمة المرور">
+    </div>
+    <button class="login-btn" onclick="doLogin()">دخول</button>
+    <div class="login-error" id="login-error">كلمة المرور غير صحيحة</div>
+  </div>
+</div>
+
+<div id="app">
+  <div class="topbar">
+    <div class="brand">ميدي كير — تقييم الأداء</div>
+    <div class="user-chip" onclick="logout()" id="user-chip">خروج</div>
+  </div>
+  <div class="main">
+    <div class="emp-tabs" id="emp-tabs"></div>
+    <div id="eval-area"></div>
+    <div class="result-section" id="result-section">
+      <h3 style="color:var(--teal);margin-bottom:.75rem">النتيجة جاهزة</h3>
+      <div class="result-text" id="result-text"></div>
+      <button class="copy-btn" onclick="copyResult()">نسخ النتيجة</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const USERS = {
+  ahmed_sayed: { password: "ah2026", name: "أحمد السيد", role: "مدير الحسابات", employees: ["sara_ali", "omar_hassan", "fatima_nour"] },
+  dr_nada: { password: "nd2026", name: "د. ندى", role: "مديرة التسويق", employees: ["noor_amjad", "hassan_kamil", "mona_said"] },
+  dr_asaad: { password: "as2026", name: "د. أسعد", role: "المدير العام", employees: ["ahmed_sayed", "dr_nada", "dr_khalid", "abdallah"] },
+  abdallah: { password: "ab2026", name: "عبدالله حزام", role: "مدير التشغيل", employees: ["technician1", "technician2", "maintenance"] },
+  ceo: { password: "ceo2026", name: "الرئيس التنفيذي", role: "الرئيس التنفيذي", employees: ["dr_asaad"] },
+  dr_khalid: { password: "khalid2026", name: "د. خالد", role: "المدير الطبي", nurses: ["rania", "ibtesam", "bassam", "rose"] }
+};
+
+const EMPLOYEES = {
+  sara_ali: { name: "سارة علي", role: "محاسبة", avatar: "س" },
+  omar_hassan: { name: "عمر حسان", role: "مطور", avatar: "ع" },
+  fatima_nour: { name: "فاطمة نور", role: "مصممة", avatar: "ف" },
+  noor_amjad: { name: "نور أمجد", role: "تسويق", avatar: "ن" },
+  hassan_kamil: { name: "حسن كامل", role: "محتوى", avatar: "ح" },
+  mona_said: { name: "منى سعيد", role: "علاقات عامة", avatar: "م" },
+  ahmed_sayed: { name: "أحمد السيد", role: "مدير الحسابات", avatar: "أ" },
+  dr_nada: { name: "د. ندى", role: "مديرة التسويق", avatar: "د" },
+  dr_khalid: { name: "د. خالد", role: "المدير الطبي", avatar: "د" },
+  abdallah: { name: "عبدالله حزام", role: "مدير التشغيل", avatar: "ع" },
+  technician1: { name: "فني أول", role: "فني", avatar: "ف" },
+  technician2: { name: "فني ثاني", role: "فني", avatar: "ف" },
+  maintenance: { name: "صيانة", role: "صيانة", avatar: "ص" },
+  rania: { name: "رانيا", role: "ممرضة مرخصة", avatar: "ر" },
+  ibtesam: { name: "ابتسام", role: "مساعدة تمريض", avatar: "ا" },
+  bassam: { name: "بسام", role: "دور محدود", avatar: "ب" },
+  rose: { name: "روز", role: "ممرضة مرخصة", avatar: "ر" }
+};
+
+const STANDARD_QUESTIONS = [
+  { id: 'attendance', text: 'الحضور والالتزام بأوقات العمل' },
+  { id: 'quality', text: 'جودة العمل المنجز ودقته' },
+  { id: 'communication', text: 'التواصل الفعال مع الفريق والعملاء' },
+  { id: 'initiative', text: 'المبادرة وتحمل المسؤوليات الإضافية' },
+  { id: 'learning', text: 'التعلم المستمر وتطوير المهارات' },
+  { id: 'teamwork', text: 'العمل الجماعي والتعاون' },
+  { id: 'goals', text: 'تحقيق الأهداف المحددة في الربع' },
+  { id: 'problem_solving', text: 'حل المشكلات والتفكير الإبداعي' }
+];
+
+const NURSE_CRITERIA = [
+  { id: 'discipline', name: 'الانضباط والالتزام', desc: 'الحضور في الوقت المحدد، اتباع السياسات' },
+  { id: 'patient_care', name: 'التعامل مع المرضى', desc: 'اللطف، الصبر، التواصل الواضح' },
+  { id: 'teamwork', name: 'العمل الجماعي', desc: 'التعاون مع الفريق الطبي' },
+  { id: 'attitude', name: 'الموقف الإيجابي', desc: 'الحماس والتعامل الإيجابي' },
+  { id: 'initiative', name: 'المبادرة والتطوير', desc: 'تقديم الاقتراحات والتطوير الذاتي' }
+];
+
+let currentUser = null;
+let currentEmployee = null;
+let evaluations = JSON.parse(localStorage.getItem('evaluations') || '{}');
+
+function doLogin() {
+  const username = document.getElementById('user-select').value;
+  const password = document.getElementById('password-input').value;
+  const error = document.getElementById('login-error');
+  
+  if (!username || !password) {
+    error.textContent = 'يرجى اختيار الاسم وإدخال كلمة المرور';
+    error.style.display = 'block';
+    return;
+  }
+  
+  const user = USERS[username];
+  if (!user || user.password !== password) {
+    error.style.display = 'block';
+    return;
+  }
+  
+  currentUser = { username, ...user };
+  document.getElementById('login-screen').style.display = 'none';
+  document.getElementById('app').style.display = 'block';
+  document.getElementById('user-chip').textContent = currentUser.name;
+  
+  initApp();
+}
+
+function logout() {
+  currentUser = null;
+  currentEmployee = null;
+  document.getElementById('login-screen').style.display = 'flex';
+  document.getElementById('app').style.display = 'none';
+  document.getElementById('user-select').value = '';
+  document.getElementById('password-input').value = '';
+  document.getElementById('login-error').style.display = 'none';
+}
+
+function initApp() {
+  const employees = currentUser.employees || currentUser.nurses || [];
+  renderTabs(employees);
+}
+
+function renderTabs(employees) {
+  const tabs = document.getElementById('emp-tabs');
+  tabs.innerHTML = employees.map((id, i) => {
+    const emp = EMPLOYEES[id];
+    const evalKey = `${currentUser.username}_${id}`;
+    const isDone = evaluations[evalKey]?.completed;
+    return `<button class="emp-tab ${i === 0 ? 'active' : ''} ${isDone ? 'done' : ''}" onclick="selectEmployee('${id}', this)">${emp.name}</button>`;
+  }).join('');
+  
+  if (employees.length > 0) {
+    selectEmployee(employees[0], tabs.firstElementChild);
+  }
+}
+
+function selectEmployee(id, tab) {
+  currentEmployee = EMPLOYEES[id];
+  
+  document.querySelectorAll('.emp-tab').forEach(t => t.classList.remove('active'));
+  tab.classList.add('active');
+  
+  if (currentUser.nurses) {
+    renderNurseEvaluation();
+  } else {
+    renderStandardEvaluation();
+  }
+}
+
+function renderNurseEvaluation() {
+  if (!currentEmployee) return;
+  
+  const area = document.getElementById('eval-area');
+  const empId = Object.keys(EMPLOYEES).find(k => EMPLOYEES[k] === currentEmployee);
+  const evalKey = `${currentUser.username}_${empId}`;
+  const saved = evaluations[evalKey] || {};
+  
+  area.innerHTML = `
+    <div class="nurse-header">
+      <div class="avatar">${currentEmployee.avatar}</div>
+      <div class="nurse-info">
+        <h2>${currentEmployee.name}</h2>
+        <p>${currentEmployee.role}</p>
+      </div>
+    </div>
+
+    <div class="section-card">
+      <div style="text-align:center;margin-bottom:1rem;color:var(--teal);font-weight:600;font-size:1.1rem">
+        تقييم الأداء الشامل
+      </div>
+      
+      ${NURSE_CRITERIA.map(criteria => `
+        <div class="rating-group">
+          <div class="rating-label">${criteria.name}</div>
+          <div class="rating-desc">${criteria.desc}</div>
+          <div class="rating-scale">
+            ${[1,2,3,4,5].map(score => `
+              <button class="rating-btn ${saved[criteria.id] === score ? 'selected' : ''}" 
+                      onclick="setRating('${criteria.id}', ${score}, '${empId}')">
+                ${score}
+              </button>
+            `).join('')}
+          </div>
+          <div style="font-size:.7rem;color:var(--text-muted);text-align:center">1 = ضعيف | 5 = ممتاز</div>
+        </div>
+      `).join('')}
+      
+      <button class="submit-btn" onclick="submitNurseEvaluation()">
+        إكمال التقييم وحساب النتيجة
+      </button>
+      
+      <div class="result-card" id="nurse-result" ${saved.completed ? 'style="display:block"' : ''}>
+        <div class="result-score" id="nurse-score">${saved.finalScore || '--'}${saved.finalScore ? '%' : ''}</div>
+        <div class="result-grade" id="nurse-grade" style="background-color:${saved.gradeColor || '#666'};color:#fff">${saved.grade || '--'}</div>
+        <button onclick="renderNurseEvaluation()" style="background:var(--navy);color:#fff;border:none;padding:.5rem 1rem;border-radius:8px;cursor:pointer">
+          تعديل التقييم
+        </button>
+      </div>
+    </div>
+  `;
+}
+
+function setRating(criteriaId, score, empId) {
+  const evalKey = `${currentUser.username}_${empId}`;
+  if (!evaluations[evalKey]) evaluations[evalKey] = {};
+  evaluations[evalKey][criteriaId] = score;
+  
+  localStorage.setItem('evaluations', JSON.stringify(evaluations));
+  
+  // Update UI
+  document.querySelectorAll(`[onclick*="${criteriaId}"]`).forEach(btn => {
+    btn.classList.remove('selected');
+  });
+  document.querySelector(`[onclick="setRating('${criteriaId}', ${score}, '${empId}')"]`).classList.add('selected');
+}
+
+function submitNurseEvaluation() {
+  const empId = Object.keys(EMPLOYEES).find(k => EMPLOYEES[k] === currentEmployee);
+  const evalKey = `${currentUser.username}_${empId}`;
+  const evaluation = evaluations[evalKey] || {};
+  const scores = Object.values(evaluation).filter(v => typeof v === 'number');
+  
+  if (scores.length < NURSE_CRITERIA.length) {
+    alert('يرجى إكمال تقييم جميع المعايير');
+    return;
+  }
+  
+  const totalScore = scores.reduce((sum, score) => sum + score, 0);
+  const maxScore = NURSE_CRITERIA.length * 5;
+  const percentage = Math.round((totalScore / maxScore) * 100);
+  
+  let grade = 'ضعيف';
+  let gradeColor = '#dc2626';
+  
+  if (percentage >= 90) { grade = 'ممتاز'; gradeColor = '#16a34a'; }
+  else if (percentage >= 80) { grade = 'جيد جداً'; gradeColor = '#0891b2'; }
+  else if (percentage >= 70) { grade = 'جيد'; gradeColor = '#ca8a04'; }
+  else if (percentage >= 60) { grade = 'مقبول'; gradeColor = '#ea580c'; }
+  
+  document.getElementById('nurse-result').style.display = 'block';
+  document.getElementById('nurse-score').textContent = percentage + '%';
+  document.getElementById('nurse-grade').textContent = grade;
+  document.getElementById('nurse-grade').style.backgroundColor = gradeColor;
+  document.getElementById('nurse-grade').style.color = '#fff';
+  
+  evaluations[evalKey].completed = true;
+  evaluations[evalKey].finalScore = percentage;
+  evaluations[evalKey].grade = grade;
+  evaluations[evalKey].gradeColor = gradeColor;
+  evaluations[evalKey].timestamp = new Date().toISOString();
+  
+  localStorage.setItem('evaluations', JSON.stringify(evaluations));
+  
+  // Update tab
+  const activeTab = document.querySelector('.emp-tab.active');
+  if (activeTab) activeTab.classList.add('done');
+}
+
+function renderStandardEvaluation() {
+  if (!currentEmployee) return;
+  
+  const area = document.getElementById('eval-area');
+  const empId = Object.keys(EMPLOYEES).find(k => EMPLOYEES[k] === currentEmployee);
+  const evalKey = `${currentUser.username}_${empId}`;
+  const saved = evaluations[evalKey] || {};
+  
+  area.innerHTML = `
+    <div style="background:#fff;border:1px solid var(--border);border-radius:14px;padding:1.25rem;margin-bottom:1rem">
+      <div style="display:flex;align-items:center;gap:12px;margin-bottom:1rem">
+        <div class="avatar">${currentEmployee.avatar}</div>
+        <div>
+          <h2 style="font-size:1.1rem;margin-bottom:4px">${currentEmployee.name}</h2>
+          <p style="font-size:.85rem;color:var(--text-muted)">${currentEmployee.role}</p>
+        </div>
+      </div>
+    </div>
+
+    <div style="background:#fff;border:1px solid var(--border);border-radius:14px;padding:1.25rem">
+      <h3 style="margin-bottom:1rem;color:var(--teal)">معايير التقييم</h3>
+      ${STANDARD_QUESTIONS.map((q, i) => `
+        <div class="q-row">
+          <div class="q-label">
+            <span class="q-num">${i + 1}</span>
+            ${q.text}
+          </div>
+          <div class="stars-std">
+            ${[5,4,3,2,1].map(rating => `
+              <input type="radio" id="${q.id}_${rating}" name="${q.id}" value="${rating}" ${saved[q.id] == rating ? 'checked' : ''} onchange="updateStandardRating('${q.id}', ${rating})">
+              <label for="${q.id}_${rating}">★</label>
+            `).join('')}
+          </div>
+          <div class="scale-hint">
+            <span>ضعيف</span>
+            <span>ممتاز</span>
+          </div>
+        </div>
+      `).join('')}
+      
+      <div style="margin-top:1.5rem;padding:1rem;background:var(--gray-light);border-radius:10px">
+        <label style="display:block;font-weight:600;margin-bottom:.5rem">ملاحظات إضافية</label>
+        <textarea placeholder="أضف أي ملاحظات أو تعليقات..." style="width:100%;padding:.6rem;border:1px solid var(--border);border-radius:6px;font-family:inherit;resize:vertical;min-height:80px;direction:rtl" oninput="updateStandardNotes(this.value)">${saved.notes || ''}</textarea>
+      </div>
+      
+      <button class="btn-primary" onclick="saveStandardEvaluation()">حفظ التقييم</button>
+    </div>
+  `;
+}
+
+function updateStandardRating(questionId, rating) {
+  const empId = Object.keys(EMPLOYEES).find(k => EMPLOYEES[k] === currentEmployee);
+  const evalKey = `${currentUser.username}_${empId}`;
+  if (!evaluations[evalKey]) evaluations[evalKey] = {};
+  evaluations[evalKey][questionId] = rating;
+  localStorage.setItem('evaluations', JSON.stringify(evaluations));
+}
+
+function updateStandardNotes(notes) {
+  const empId = Object.keys(EMPLOYEES).find(k => EMPLOYEES[k] === currentEmployee);
+  const evalKey = `${currentUser.username}_${empId}`;
+  if (!evaluations[evalKey]) evaluations[evalKey] = {};
+  evaluations[evalKey].notes = notes;
+  localStorage.setItem('evaluations', JSON.stringify(evaluations));
+}
+
+function saveStandardEvaluation() {
+  const empId = Object.keys(EMPLOYEES).find(k => EMPLOYEES[k] === currentEmployee);
+  const evalKey = `${currentUser.username}_${empId}`;
+  const saved = evaluations[evalKey] || {};
+  
+  const unanswered = STANDARD_QUESTIONS.filter(q => !saved[q.id]);
+  if (unanswered.length > 0) {
+    alert(`يرجى الإجابة على جميع الأسئلة. المتبقي: ${unanswered.length}`);
+    return;
+  }
+  
+  saved.completed = true;
+  saved.timestamp = new Date().toISOString();
+  evaluations[evalKey] = saved;
+  
+  localStorage.setItem('evaluations', JSON.stringify(evaluations));
+  
+  const activeTab = document.querySelector('.emp-tab.active');
+  if (activeTab) activeTab.classList.add('done');
+  
+  generateStandardResult(saved);
+}
+
+function generateStandardResult(evaluation) {
+  const total = STANDARD_QUESTIONS.reduce((sum, q) => sum + (evaluation[q.id] || 0), 0);
+  const average = (total / STANDARD_QUESTIONS.length).toFixed(1);
+  const percentage = ((total / (STANDARD_QUESTIONS.length * 5)) * 100).toFixed(0);
+  
+  let grade = 'ضعيف';
+  if (percentage >= 90) grade = 'ممتاز';
+  else if (percentage >= 80) grade = 'جيد جداً';
+  else if (percentage >= 70) grade = 'جيد';
+  else if (percentage >= 60) grade = 'مقبول';
+  
+  const resultText = `تقييم أداء الموظف: ${currentEmployee.name}
+  
+الدرجة الإجمالية: ${total}/${STANDARD_QUESTIONS.length * 5}
+المتوسط: ${average}/5.0
+النسبة المئوية: ${percentage}%
+التقدير: ${grade}
+
+تفصيل الدرجات:
+${STANDARD_QUESTIONS.map((q, i) => `${i + 1}. ${q.text}: ${evaluation[q.id] || 0}/5`).join('\n')}
+
+${evaluation.notes ? `\nملاحظات إضافية:\n${evaluation.notes}` : ''}`;
+  
+  document.getElementById('result-text').textContent = resultText;
+  document.getElementById('result-section').style.display = 'block';
+}
+
+function copyResult() {
+  const text = document.getElementById('result-text').textContent;
+  navigator.clipboard.writeText(text).then(() => {
+    alert('تم نسخ النتيجة');
+  });
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  document.getElementById('user-select').addEventListener('change', () => {
+    document.getElementById('password-input').focus();
+  });
+  
+  document.getElementById('password-input').addEventListener('keypress', (e) => {
+    if (e.key === 'Enter') doLogin();
+  });
+});
+</script>
+
+</body>
+</html>
